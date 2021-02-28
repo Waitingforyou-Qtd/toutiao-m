@@ -51,8 +51,7 @@
       closeable
       close-icon-position="top-left"
     >
-      <channel-edit
-    /></van-popup>
+      <channel-edit  :active="active" :my-channels="channels" /></van-popup>
     <!-- /频道编辑弹出层 -->
   </div>
 </template>
@@ -88,7 +87,7 @@ export default {
   },
   mounted() {},
   methods: {
-    // 2. 定义加载频道列表数据的方法
+    // 2. :TODO:  定义加载频道列表数据的方法
     async loadChannels() {
       try {
         // 捕获异常

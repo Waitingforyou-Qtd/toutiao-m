@@ -83,7 +83,7 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    // 当触发上拉加载更多的时候调用该函数
+    // :TODO:  当触发上拉加载更多的时候调用该函数
     async onLoad() {
       try {
         // 1. 请求获取数据
@@ -96,15 +96,15 @@ export default {
         // if (Math.random() > 0.5) {
         //   JSON.parse('dasdafrwer')
         // }
-        // 2. 把数据添加到 list 数组中
+        // 2. :TODO:  把数据添加到 list 数组中
         // 数组的展开操作符,会把数组元素一个一个拿出来
         const { results } = data.data
         this.list.push(...results)
 
-        // 3. 设置本次加载中 loading 状态结束
+        // 3. :TODO:  设置本次加载中 loading 状态结束
         this.loading = false
 
-        // 4. 判断数据是否加载结束
+        // 4. :TODO:  判断数据是否加载结束
         if (results.length) {
           // 更新获取下一页数据的时间戳
           this.timestamp = data.data.pre_timestamp
@@ -118,10 +118,10 @@ export default {
         this.error = true // 开启错误提示
       }
     },
-    // 当触发下拉刷新的时候调用该函数
+    // :TODO:  当触发下拉刷新的时候调用该函数
     async onRefresh() {
       try {
-        // 1. 请求获取数据
+        // 1. :TODO:  请求获取数据
         const { data } = await getArticles({
           channel_id: this.channel.id, // 频道 id
           timestamp: Date.now(), // 下拉刷新每次都应该获取最新数据
@@ -132,14 +132,14 @@ export default {
         // if (Math.random() > 0.2) {
         //   JSON.parse('dasdafrwer')
         // }
-        // 2. 将数据追加到列表的顶部
+        // 2. :TODO:  将数据追加到列表的顶部
         const { results } = data.data
         this.list.unshift(...results)
 
-        // 3. 关闭下拉刷新的 loading 状态
+        // 3. :TODO:  关闭下拉刷新的 loading 状态
         this.isRefreshLoading = false
 
-        // 提示成功
+        // :TODO:  提示成功
         this.refreshSuccessText = `✔刷新成功，更新了${results.length}条数据...`
       } catch (err) {
         console.log(err)
