@@ -50,8 +50,9 @@
       :style="{ height: '100%' }"
       closeable
       close-icon-position="top-left"
-      >内容</van-popup
     >
+      <channel-edit
+    /></van-popup>
     <!-- /频道编辑弹出层 -->
   </div>
 </template>
@@ -61,11 +62,13 @@
 import { getUserChannels } from '@/api/user'
 // 加载组件
 import ArticleList from './components/article-list'
+import ChannelEdit from './components/channel-edit'
 export default {
   name: 'HomeIndex',
   components: {
     // 注册组件
-    ArticleList
+    ArticleList,
+    ChannelEdit
   },
   props: {},
   data() {
