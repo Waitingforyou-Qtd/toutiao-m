@@ -1,16 +1,11 @@
 <template>
   <div class="my-container">
-    <!-- 已登录头部 -->
+    <!--TODO: 已登录头部 -->
     <div v-if="user" class="header user-info">
       <div class="base-info">
         <div class="left">
-          <van-image
-            fit="cover"
-            class="avatar"
-            src="https://img.yzcdn.cn/vant/cat.jpeg"
-            round
-          />
-          <span class="name">**头条**</span>
+          <van-image fit="cover" class="avatar" :src="userInfo.photo" round />
+          <span class="name">{{ userInfo.name }}</span>
         </div>
         <div class="right">
           <van-button type="default" size="mini" round>编辑资料</van-button>
@@ -18,25 +13,25 @@
       </div>
       <div class="data-stats">
         <div class="data-item">
-          <span class="count">345</span>
+          <span class="count">{{ userInfo.art_count }}</span>
           <span class="text">头条</span>
         </div>
         <div class="data-item">
-          <span class="count">110</span>
+          <span class="count">{{ userInfo.follow_count }}</span>
           <span class="text">关注</span>
         </div>
         <div class="data-item">
-          <span class="count">380</span>
+          <span class="count">{{ userInfo.fans_count }}</span>
           <span class="text">粉丝</span>
         </div>
         <div class="data-item">
-          <span class="count">160</span>
+          <span class="count">{{ userInfo.like_count }}</span>
           <span class="text">点赞</span>
         </div>
       </div>
     </div>
     <!-- 已登录头部 -->
-    <!--未登录头部 -->
+    <!--TODO: 未登录头部 -->
     <div v-else class="header not-login">
       <div class="login-btn" @click="$router.push('/login')">
         <img class="mobile-img" src="~@/assets/mobile.png" />
@@ -60,17 +55,19 @@
     <van-cell title="消息通知" is-link />
     <van-cell class="mb-9" title="小智同学" is-link />
     <van-cell
-      v-if="user"
-      clickable
       @click="onLogout"
+      v-if="user"
       class="logout-cell"
       title="退出登录"
+      center
+      clickable
     />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+// 按需加载
 import { getUserInfo } from '@/api/user'
 export default {
   name: 'MyIndex',
@@ -78,7 +75,8 @@ export default {
   props: {},
   data() {
     return {
-      UserInfo: {}
+      // TODO: 用户信息
+      userInfo: {}
     }
   },
   computed: {
@@ -86,7 +84,7 @@ export default {
   },
   watch: {},
   created() {
-    // 初始化的时候，如果用户登录了，请求获取当前登录用户的信息
+    // TODO:如果用户登录了，请求获取当前登录用户的信息
     if (this.user) {
       this.loadUserInfo()
     }
@@ -98,7 +96,7 @@ export default {
       // 在组件中需要使用 this.$dialog 来调用弹框组件
       this.$dialog
         .confirm({
-          title: '您确认要退出吗？'
+          title: '您确认要退出吗?'
         })
         .then(() => {
           // on confirm
@@ -107,7 +105,7 @@ export default {
         })
         .catch(() => {
           // on cancel
-          console.log('取消执行这里!')
+          console.log('取消登录!')
         })
     },
     async loadUserInfo() {
