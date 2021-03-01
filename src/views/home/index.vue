@@ -51,7 +51,12 @@
       closeable
       close-icon-position="top-left"
     >
-      <channel-edit  :active="active" :my-channels="channels" /></van-popup>
+      <!-- :TODO: 在父组件中监听处理自定义事件 -->
+      <channel-edit
+        @update-active="onUpdateActive"
+        :active="active"
+        :my-channels="channels"
+    /></van-popup>
     <!-- /频道编辑弹出层 -->
   </div>
 </template>
@@ -97,6 +102,13 @@ export default {
       } catch (err) {
         this.$toast('获取频道列表数据失败')
       }
+    },
+    // 声明参数接收 定义事件函数
+    onUpdateActive(a, isChennelEditShow = true) {
+      // 更新激活的频道项
+      this.active = a
+      // !控制隐藏 关闭编辑频道弹出层
+      this.isEditChannelShow = isChennelEditShow
     }
   }
 }
