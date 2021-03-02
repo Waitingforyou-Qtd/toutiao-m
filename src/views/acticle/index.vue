@@ -123,7 +123,7 @@ export default {
     return {
       article: {}, // 文章详情
       loading: true, // 加载中的loading状态
-      errStatus: 0 // 失败的状态码
+      errStatus: 0 // 这是失败的状态码
     }
   },
   computed: {},
@@ -162,6 +162,7 @@ export default {
       this.loading = false
     },
     previewImg() {
+      // 定义变量
       const contentEl = this.$refs.contentRef
       const allImg = contentEl.querySelectorAll('img')
       const images = []
@@ -169,6 +170,7 @@ export default {
         images.push(element.src)
         element.onclick = () => {
           ImagePreview({
+            // 图片
             images,
             startPosition: index
           })
