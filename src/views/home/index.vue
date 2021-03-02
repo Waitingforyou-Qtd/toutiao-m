@@ -2,7 +2,7 @@
   <div class="home-container">
     <!-- 导航栏 频道列表固定定位-->
     <van-nav-bar class="page-nav-bar" fixed>
-      <!-- 自定义插槽 -->
+      <!-- 自定义插槽  to跳转-->
       <van-button
         class="search-btn"
         slot="title"
@@ -10,6 +10,7 @@
         size="small"
         round
         icon="search"
+        to="/search"
         >搜索</van-button
       >
     </van-nav-bar>
@@ -67,6 +68,9 @@ import { getUserChannels } from '@/api/user'
 // 加载组件
 import ArticleList from './components/article-list'
 import ChannelEdit from './components/channel-edit'
+// 导入mapstate获取user
+import { mapState } from 'vuex'
+import { getItem } from '@/utils/storage'
 export default {
   name: 'HomeIndex',
   components: {
@@ -84,7 +88,10 @@ export default {
       isEditChannelShow: false // 控制编辑频道弹出层的显示状态
     }
   },
-  computed: {},
+  // 计算属性
+  computed: {
+    ...mapState(['user'])
+  },
   watch: {},
   created() {
     // 3. 调用获取频道列表
@@ -95,15 +102,25 @@ export default {
     // 2. :TODO:  定义加载频道列表数据的方法
     async loadChannels() {
       try {
-        // 捕获异常
-        const { data } = await getUserChannels()
-        // 添加到实例
-        this.channels = data.data.channels
+        // 定义变量
+        let channles = []
+        // 未登录,请求获取线上的频道数据
+        const localChannels = getItem('TOUTIAO_CHANNELS')
+        if (this.user || !localChannels) {
+          // 登录 或者 本地没有存储 获取后端数据
+          const { data } = await getUserChannels()
+          this.channels = data.data.channels
+          return false
+        } else {
+          // 未登录并且本地没有数据
+          channles = localChannels
+        }
+        this.channels = channles
       } catch (err) {
         this.$toast('获取频道列表数据失败')
       }
     },
-    // 声明参数接收 定义事件函数
+    // !声明参数接收 定义事件函数
     onUpdateActive(a, isChennelEditShow = true) {
       // 更新激活的频道项
       this.active = a

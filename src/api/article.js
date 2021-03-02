@@ -15,3 +15,16 @@ export const getArticles = params => {
     params
   })
 }
+/**
+ * 文章接口模块
+ */
+
+/**
+ * 获取频道的文章列表
+ */
+export const getArticleById = articleId => {
+  return request({
+    method: 'GET',
+    url: `/app/v1_0/articles/${articleId}`
+  })
+}

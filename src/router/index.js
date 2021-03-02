@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
+  // 一级路由
   {
     path: '/login',
     name: 'login',
@@ -35,6 +36,22 @@ const routes = [
         component: () => import('@/views/my')
       }
     ]
+  },
+  // 一级路由
+  {
+    path: '/search',
+    name: 'Search',
+    component: () => import('@/views/search')
+  },
+  // 页面配置到根级路由
+  // 将路由动态参数映射到组件的 props 中，更推荐这种做法
+  // props: true
+  {
+    path: '/article/:articleId',
+    name: 'article',
+    component: () => import('@/views/acticle'),
+    // props: true将路由动态参数映射到组件的 props 中，更推荐这种做法 开启路由传参
+    props: true
   }
 ]
 
