@@ -115,13 +115,14 @@ export default {
   components: {},
   props: {
     articleId: {
+      // 类型为数字 字符串 对象
       type: [Number, String, Object],
       required: true
     }
   },
   data() {
     return {
-      article: {}, // 文章详情
+      article: {}, // 这里是文章详情
       loading: true, // 加载中的loading状态
       errStatus: 0 // 这是失败的状态码
     }
