@@ -67,7 +67,7 @@
       </div>
       <!-- /加载完成-文章详情 -->
 
-      <!--TODO:  加载失败：404 -->
+      <!--:TODO:  加载失败：404 -->
       <div v-else-if="errStatus === 404" class="error-wrap">
         <van-icon name="failure" />
         <p class="text">该资源不存在或已删除！</p>

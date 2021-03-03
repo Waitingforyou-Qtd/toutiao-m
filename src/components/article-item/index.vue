@@ -9,7 +9,7 @@
       name: 'article',
       // 传递参数，属性名要求是配置路由时路径中指定的名称，path: '/article/:articleId',
       params: {
-        articleId: 'article.art_id'
+        articleId: article.art_id
       }
     }"
   >
@@ -27,14 +27,15 @@
           <van-image class="cover-item-img" fit="cover" :src="img" />
         </div>
       </div>
+      ``
       <div class="label-info-wrap">
-        <!-- 名字 评论 时间-->
+        <!--:TODO: 名字 评论 时间-->
         <span>{{ article.aut_name }}</span>
         <span>{{ article.comm_count }}评论</span>
         <span>{{ article.pubdate | relativeTime }}</span>
       </div>
     </div>
-    <!-- 图片 -->
+    <!--:TODO:  图片 -->
     <van-image
       v-if="article.cover.type === 1"
       slot="default"
@@ -47,6 +48,7 @@
 
 <script>
 export default {
+  // 组件名称
   name: 'ArticleItem',
   components: {},
   props: {

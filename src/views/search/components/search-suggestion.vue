@@ -1,5 +1,5 @@
 <template>
-  <div class="search-result">
+  <div class="search-result search-suggestion">
     <!-- 点击联想进行搜索 -->
     <van-cell
       icon="search"
@@ -60,7 +60,7 @@ export default {
   created() {},
   methods: {
     async loadSearchSuggestions(q) {
-      // 抛出异常
+      // try 抛出异常
       try {
         const { data } = await getSearchSuggestions(q)
         // console.log(data)
@@ -85,6 +85,7 @@ export default {
      * 4. 所以我们使用了 RegExp 对象。RegExp 构造函数创建了一个正则表达式对象，用于将文本与一个模式匹配。MDN: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp
      * 5. 通过 RegExp 来完成响应式数据的正则匹配
      */
+    // :TODO: 高亮效果
     highlight(text) {
       const highlightStr = `<span class="actived">${this.searchText}</span>`
       // 正则表达式 // 中间的内容都会当作匹配字符来使用，而不是数据变量
@@ -103,7 +104,7 @@ export default {
 <style scoped lang="less">
 .search-suggestion {
   /deep/ span.actived {
-    color: rgb(245, 120, 3);
+    color: peru;
   }
 }
 </style>
