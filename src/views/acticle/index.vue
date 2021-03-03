@@ -36,19 +36,24 @@
             {{ article.pubdate | relativeTime }}
           </div>
           <van-button
+            v-if="article.is_followed"
+            class="follow-btn"
+            round
+            size="small"
+            @click="onFollow"
+            >已关注</van-button
+          >
+          <van-button
+            v-else
             class="follow-btn"
             type="info"
             color="#3296fa"
             round
             size="small"
             icon="plus"
+            @click="onFollow"
             >关注</van-button
           >
-          <!-- <van-button
-            class="follow-btn"
-            round
-            size="small"
-          >已关注</van-button> -->
         </van-cell>
         <!-- /用户信息 -->
 
@@ -97,6 +102,7 @@
 import { getArticleById } from '@/api/article'
 // 图片预览
 import { ImagePreview } from 'vant'
+import { addFollow, deleteFollow } from '@/api/user'
 ImagePreview({
   // 图片地址
   images: [
@@ -177,6 +183,29 @@ export default {
           })
         }
       })
+    },
+    async onFollow() {
+      // 开启按钮的 loading 状态
+      this.isFollowLoading = true
+
+      try {
+        // 如果已关注，则取消关注
+        const authorId = this.article.aut_id
+        if (this.article.is_followed) {
+          await deleteFollow(authorId)
+        } else {
+          // 否则添加关注
+          await addFollow(authorId)
+        }
+        // 更新视图
+        this.article.is_followed = !this.article.is_followed
+      } catch (err) {
+        console.log(err)
+        this.$toast.fail('操作失败')
+      }
+
+      // 关闭按钮的 loading 状态
+      this.isFollowLoading = false
     }
   }
 }

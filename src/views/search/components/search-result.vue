@@ -47,11 +47,12 @@ export default {
   created() {},
   methods: {
     async onLoad() {
+      // 捕获异常
       try {
         // ! 1. 请求获取数据
         const { data } = await getSearchResult({
           page: this.page, // 页码
-          per_page: this.perPage, // 每页大小
+          per_page: this.perPage, // 每页条数
           q: this.searchText // 搜索关键字
         })
         // TODO:模拟随机失败
