@@ -112,19 +112,19 @@ import { getArticleById } from '@/api/article'
 import { ImagePreview } from 'vant'
 // 按需加载
 import FollowUser from '@/components/follow-user'
-ImagePreview({
-  // 图片地址
-  images: [
-    'https://img.yzcdn.cn/vant/apple-1.jpg',
-    'https://img.yzcdn.cn/vant/apple-2.jpg'
-  ],
-  // 预览图片的起始位置
-  startPosition: 1,
-  // 点击关闭
-  onClose() {
-    // do something
-  }
-})
+// ImagePreview({
+//   // 图片地址
+//   images: [
+//     'https://img.yzcdn.cn/vant/apple-1.jpg',
+//     'https://img.yzcdn.cn/vant/apple-2.jpg'
+//   ],
+//   // 预览图片的起始位置
+//   startPosition: 1,
+//   // 点击关闭
+//   onClose() {
+//     // do something
+//   }
+// })
 export default {
   name: 'ArticleIndex',
   // 注册组件
@@ -188,7 +188,7 @@ export default {
       const images = []
       allImg.forEach((element, index) => {
         images.push(element.src)
-        element.onclick = () => {
+        element.onclick = function() {
           ImagePreview({
             // 图片
             images,
