@@ -1,6 +1,6 @@
 <template>
   <van-button
-    v-if="value"
+    v-if="isFollowed"
     class="follow-btn"
     round
     :loading="loading"
@@ -29,9 +29,14 @@ export default {
   // 组件名称
   name: 'FollowUser',
   components: {},
+  // 自定义事件
+  model: {
+    prop: 'isFollowed', // 默认是 value
+    event: 'update-is_followed' // 默认是 input
+  },
   // 接受 布尔值
   props: {
-    value: {
+    isFollowed: {
       type: Boolean,
       required: true
     },
@@ -60,6 +65,8 @@ export default {
         // this.article.is_followed = !this.article.is_followed
         // 更新视图
         this.$emit('update-is_followed', !this.isFollowed)
+        // this.$emit('input', !this.value)
+        // this.$emit('update-is_followed', !this.value)
       } catch (err) {
         // console.log(err)
         let massage = '操作失败,请重试...'
