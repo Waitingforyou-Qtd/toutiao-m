@@ -104,7 +104,7 @@ export default {
 <style scoped lang="less">
 .search-suggestion {
   /deep/ span.actived {
-    color: peru;
+    color: rgb(243, 125, 8);
   }
 }
 </style>

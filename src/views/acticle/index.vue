@@ -35,11 +35,18 @@
           <div slot="label" class="publish-date">
             {{ article.pubdate | relativeTime }}
           </div>
-          <van-button
+          <!-- 模板中的$event是事件参数 -->
+          <follow-user
+            :user-id="article.aut_id"
+            class="follow-btn"
+            v-model="article.is_followed"
+          />
+          <!-- <van-button
             v-if="article.is_followed"
             class="follow-btn"
             round
             size="small"
+            :loading="followLoading"
             @click="onFollow"
             >已关注</van-button
           >
@@ -51,9 +58,10 @@
             round
             size="small"
             icon="plus"
+            :loading="followLoading"
             @click="onFollow"
             >关注</van-button
-          >
+          > -->
         </van-cell>
         <!-- /用户信息 -->
 
@@ -102,7 +110,8 @@
 import { getArticleById } from '@/api/article'
 // 图片预览
 import { ImagePreview } from 'vant'
-import { addFollow, deleteFollow } from '@/api/user'
+// 按需加载
+import FollowUser from '@/components/follow-user'
 ImagePreview({
   // 图片地址
   images: [
@@ -118,7 +127,10 @@ ImagePreview({
 })
 export default {
   name: 'ArticleIndex',
-  components: {},
+  // 注册组件
+  components: {
+    FollowUser
+  },
   props: {
     articleId: {
       // 类型为数字 字符串 对象
@@ -130,7 +142,8 @@ export default {
     return {
       article: {}, // 这里是文章详情
       loading: true, // 加载中的loading状态
-      errStatus: 0 // 这是失败的状态码
+      errStatus: 0, // 这是失败的状态码
+      followLoading: false
     }
   },
   computed: {},
@@ -183,29 +196,6 @@ export default {
           })
         }
       })
-    },
-    async onFollow() {
-      // 开启按钮的 loading 状态
-      this.isFollowLoading = true
-
-      try {
-        // 如果已关注，则取消关注
-        const authorId = this.article.aut_id
-        if (this.article.is_followed) {
-          await deleteFollow(authorId)
-        } else {
-          // 否则添加关注
-          await addFollow(authorId)
-        }
-        // 更新视图
-        this.article.is_followed = !this.article.is_followed
-      } catch (err) {
-        console.log(err)
-        this.$toast.fail('操作失败')
-      }
-
-      // 关闭按钮的 loading 状态
-      this.isFollowLoading = false
     }
   }
 }
