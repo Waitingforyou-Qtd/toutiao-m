@@ -1,23 +1,23 @@
 <template>
   <div class="article-container">
-    <!-- 导航栏 -->
+    <!-- 导航栏... -->
     <van-nav-bar class="page-nav-bar" left-arrow title="**头条**"></van-nav-bar>
-    <!-- /导航栏 -->
+    <!-- /导航栏 ...-->
 
     <div class="main-wrap">
-      <!-- 加载中 -->
+      <!-- 加载中... -->
       <div class="loading-wrap" v-if="loading">
         <van-loading color="#3296fa" vertical>加载中</van-loading>
       </div>
-      <!-- /加载中 -->
+      <!-- /加载中... -->
 
-      <!-- 加载完成-文章详情 -->
+      <!-- 加载完成-文章详情... -->
       <div class="article-detail" v-else-if="article.title">
-        <!-- 文章标题 -->
+        <!-- 文章标题... -->
         <h1 class="article-title">{{ article.title }}</h1>
-        <!-- /文章标题 -->
+        <!-- /文章标题... -->
 
-        <!-- 用户信息 -->
+        <!-- 用户信息... -->
         <van-cell class="user-info" center :border="false">
           <van-image
             class="avatar"
