@@ -41,7 +41,7 @@ export default {
         }
         // 更新视图
         this.$emit('input', !this.value)
-        // 注意这里的 this.value 不会马上改变，所以进行了取反
+        //                                            :TODO: 注意这里的 this.value 不会马上改变，所以进行了取反
         this.$toast.success(!this.value ? '收藏成功 !' : '取消收藏 !')
       } catch (err) {
         this.$toast.fail('操作失败，请重试')
