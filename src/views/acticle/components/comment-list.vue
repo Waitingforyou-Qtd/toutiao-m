@@ -7,19 +7,18 @@
     error-text="加载失败..."
     @load="onLoad"
   >
-    <van-cell
-      v-for="(item, index) in list"
-      :key="index"
-      :title="item.content"
-    />
+    <comment-item v-for="(item, index) in list" :key="index" :comment="item" />
   </van-list>
 </template>
 
 <script>
 import { getComments } from '@/api/comment'
+import CommentItem from './comment-item'
 export default {
   name: 'CommentList',
-  components: {},
+  components: {
+    CommentItem
+  },
   props: {
     source: {
       type: [Number, String, Object],
@@ -38,7 +37,9 @@ export default {
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    this.onLoad()
+  },
   mounted() {},
   methods: {
     async onLoad() {
@@ -52,14 +53,14 @@ export default {
           limit: this.limit // 每页大小
         })
 
-        console.log(data)
+        // console.log(data)
 
         // 2. 将数据添加到列表中
         const { results } = data.data
         // 数组合并
         this.list.push(...results)
         // 更新总数据条数
-        this.totalCount = data.data.total_count
+        this.$emit('onload-success', data.data)
         // 3. 将加载更多的 loading 设置为 false
         this.loading = false
 

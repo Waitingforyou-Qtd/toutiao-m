@@ -5,41 +5,78 @@
       class="avatar"
       round
       fit="cover"
-      src="https://img.yzcdn.cn/vant/cat.jpeg"
+      :src="comment.aut_photo"
     />
     <div slot="title" class="title-wrap">
-      <div class="user-name">用户名称</div>
-      <van-button class="like-btn" icon="good-job-o">赞</van-button>
+      <div class="user-name">{{ comment.aut_name }}</div>
+      <van-button
+        class="like-btn"
+        :icon="comment.is_liking ? 'good-job' : 'good-job-o'"
+        :class="{
+          liked: comment.is_liking
+        }"
+        @click="onCommentLike"
+        :loading="commentLoading"
+        >{{ comment.like_count || '赞' }}</van-button
+      >
     </div>
 
     <div slot="label">
-      <p class="comment-content">这是评论内容</p>
+      <p class="comment-content">{{ comment.content }}</p>
       <div class="bottom-info">
-        <span class="comment-pubdate">4天前</span>
-        <van-button class="reply-btn" round>回复 0</van-button>
+        <span class="comment-pubdate">{{
+          comment.pubdate | relativeTime
+        }}</span>
+        <van-button class="reply-btn" round
+          >回复 {{ comment.reply_count }}</van-button
+        >
       </div>
     </div>
   </van-cell>
 </template>
 
 <script>
+// 在事件处理函数中
+import { addCommentLike, deleteCommentLike } from '@/api/comment'
 export default {
   name: 'CommentItem',
   components: {},
   props: {
+    // 声明接受
     comment: {
       type: Object,
       required: true
     }
   },
   data() {
-    return {}
+    return {
+      commentLoading: false
+    }
   },
   computed: {},
   watch: {},
   created() {},
   mounted() {},
-  methods: {}
+  methods: {
+    async onCommentLike() {
+      this.commentLoading = true
+      try {
+        if (this.comment.is_liking) {
+          // 如果已经赞了则取消点赞
+          await deleteCommentLike(this.comment.com_id)
+          this.comment.like_count--
+        } else {
+          // 如果没有赞，则点赞
+          await addCommentLike(this.comment.com_id)
+          this.comment.like_count++
+        }
+        this.comment.is_liking = !this.comment.is_liking
+      } catch (err) {
+        this.$toast('操作失败,请重试...')
+      }
+      this.commentLoading = false
+    }
+  }
 }
 </script>
 
@@ -89,7 +126,10 @@ export default {
     line-height: 30px;
     margin-right: 7px;
     .van-icon {
-      font-size: 30px;
+      font-size: 32px;
+    }
+    &.liked {
+      color: #ee7165;
     }
   }
 }

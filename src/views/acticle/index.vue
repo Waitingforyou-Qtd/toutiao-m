@@ -53,7 +53,12 @@
         <!-- /文章评论列表 -->
         <!-- 底部区域 -->
         <div class="article-bottom">
-          <van-button class="comment-btn" type="default" round size="small"
+          <van-button
+            class="comment-btn"
+            type="default"
+            round
+            size="small"
+            @click="isPostShow = true"
             >写评论</van-button
           >
           <!-- 这里在 info 替换成 badge -->
@@ -76,6 +81,9 @@
           <van-icon name="share" color="#777777"></van-icon>
         </div>
         <!-- /底部区域 -->
+        <!-- 发布评论 -->
+        <van-popup v-model="isPostShow" position="bottom">123</van-popup>
+        <!-- /发布评论 -->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -126,7 +134,8 @@ export default {
       loading: true, // 加载中的状态
       errStatus: 0, // 失败的状态码
       followLoading: false, // 关注按钮的 loading 状态
-      totalCommentCount: 0
+      totalCommentCount: 0, // 评论总数
+      isPostShow: false // 控制发布评论的显示状态
     }
   },
   computed: {},
