@@ -1,11 +1,6 @@
-/**
- * 用户相关的请求模块
- */
-import request from '../utils/request'
-// import store from '@/store'
-/**
- * 用户登录
- */
+// 用户相关请求
+import request from '@/utils/request'
+
 export const login = data => {
   return request({
     method: 'POST',
@@ -13,10 +8,9 @@ export const login = data => {
     data
   })
 }
-// 发送短信验证码
-// 每手机号每分钟1次
 
-export const getSmsCode = mobile => {
+// 发送验证码
+export const sendSms = mobile => {
   return request({
     method: 'GET',
     url: `/app/v1_0/sms/codes/${mobile}`
@@ -28,60 +22,68 @@ export const getUserInfo = () => {
   return request({
     method: 'GET',
     url: '/app/v1_0/user'
-    // 发送请求头数据
-    // headers: {
-    // 注意：该接口需要授权才能访问 token的数据格式：Bearer token数据，注意 Bearer 后面有个空格
-    // Authorization: `Bearer ${store.state.user.token}`
-    // }
+    // 携带请求头信息
+    /* headers: {
+      Authorization: `Bearer ${store.state.user.token}`
+    } */
   })
 }
 
-// 获取频道列表的信息
+// 获取用户频道列表
 export const getUserChannels = () => {
   return request({
     method: 'GET',
     url: '/app/v1_0/user/channels'
   })
 }
-/**
- * 关注用户
- */
+
+// 关注用户
 export const addFollow = target => {
   return request({
     method: 'POST',
     url: '/app/v1_0/user/followings',
     data: {
-      target
+      target // 代表要关注的目标（用户ID）
     }
   })
 }
 
-/**
- * 取消关注用户
- */
+// 取消关注用户
 export const deleteFollow = target => {
   return request({
     method: 'DELETE',
     url: `/app/v1_0/user/followings/${target}`
   })
 }
+
 /**
- * 获取用户个人资料
+ * 获取当前登录用户的个人资料
  */
-// 获取指定用户信息
 export const getUserProfile = target => {
   return request({
     method: 'GET',
     url: '/app/v1_0/user/profile'
   })
 }
+
 /**
- * 更新昵称
+ * 更新用户资料
  */
-export const updateUserName = data => {
+export const updateUserProfile = data => {
   return request({
     method: 'PATCH',
     url: '/app/v1_0/user/profile',
+    data
+  })
+}
+
+/**
+ * 更新用户照片资料
+ */
+export const updateUserPhoto = data => {
+  return request({
+    method: 'PATCH',
+    url: '/app/v1_0/user/photo',
     data
   })
 }
