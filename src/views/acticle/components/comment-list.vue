@@ -7,7 +7,12 @@
     error-text="加载失败..."
     @load="onLoad"
   >
-    <comment-item v-for="(item, index) in list" :key="index" :comment="item" />
+    <comment-item
+      v-for="(item, index) in list"
+      :key="index"
+      :comment="item"
+      @reply-click="$emit('reply-click', $event)"
+    />
   </van-list>
 </template>
 
@@ -23,11 +28,23 @@ export default {
     source: {
       type: [Number, String, Object],
       required: true
+    },
+    list: {
+      type: Array,
+      default: () => []
+    },
+    type: {
+      type: String,
+      validator(value) {
+        return ['a', 'c'].includes(value)
+      },
+      // 默认值
+      default: 'a'
     }
   },
   data() {
     return {
-      list: [], // 评论列表
+      // list: [], // 评论列表
       loading: false, // 上拉加载更多的 loading
       finished: false, // 是否加载结束
       offset: null, // 用来获取下一页的标记
@@ -47,8 +64,8 @@ export default {
       try {
         // 1. 请求获取数据
         const { data } = await getComments({
-          type: 'a', // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
-          source: this.source, // 源id，文章id或评论id
+          type: this.type, // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
+          source: this.source.toString(), // 源id，文章id或评论id
           offset: this.offset, // 获取评论数据的偏移量，值为评论id，表示从此id的数据向后取，不传表示从第一页开始读取数据
           limit: this.limit // 每页大小
         })
