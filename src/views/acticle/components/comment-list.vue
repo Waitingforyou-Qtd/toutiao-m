@@ -1,12 +1,19 @@
 <template>
+  <!-- 只有 List 在可视范围内，才会检查滚动位置触发 onLoad -->
   <van-list
     v-model="loading"
     :finished="finished"
     finished-text="没有更多了"
-    :error="error"
-    error-text="加载失败..."
+    :error.sync="error"
+    error-text="加载失败，请点击重试"
+    :immediate-check="false"
     @load="onLoad"
   >
+    <!-- <van-cell
+      v-for="(item, index) in list"
+      :key="index"
+      :title="item.content"
+    /> -->
     <comment-item
       v-for="(item, index) in list"
       :key="index"
@@ -19,6 +26,7 @@
 <script>
 import { getComments } from '@/api/comment'
 import CommentItem from './comment-item'
+// http://localhost:8080/#/article/137825
 export default {
   name: 'CommentList',
   components: {
@@ -31,61 +39,56 @@ export default {
     },
     list: {
       type: Array,
-      default: () => []
+      default: () => [] // 对象给默认值要以函数返回值的方式
     },
     type: {
       type: String,
       validator(value) {
         return ['a', 'c'].includes(value)
       },
-      // 默认值
       default: 'a'
     }
   },
   data() {
     return {
-      // list: [], // 评论列表
-      loading: false, // 上拉加载更多的 loading
-      finished: false, // 是否加载结束
-      offset: null, // 用来获取下一页的标记
+      // list: [],
+      loading: false,
+      finished: false,
+      offset: null, // 获取下一页数据的标记
       limit: 10,
       error: false
     }
   },
-  computed: {},
-  watch: {},
   created() {
+    // 一上来就加载一次，为了显示评论总数
+    // 当你手动初始 onLoad 的话，它不会自动开始初始的 loading，所以我们要手动的开启初始 loading
+    this.loading = true
     this.onLoad()
   },
-  mounted() {},
   methods: {
     async onLoad() {
-      // 抛出异常
       try {
-        // 1. 请求获取数据
+        // 1. 请求数据
         const { data } = await getComments({
-          type: this.type, // 评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
-          source: this.source.toString(), // 源id，文章id或评论id
-          offset: this.offset, // 获取评论数据的偏移量，值为评论id，表示从此id的数据向后取，不传表示从第一页开始读取数据
-          limit: this.limit // 每页大小
+          type: this.type, // 评论类型，a 代表对文章的评论，c 代表评论的回复
+          source: this.source.toString(), // 源 id，文章 id 或评论 id
+          offset: this.offset,
+          limit: this.limit // 获取的个数
         })
-
-        // console.log(data)
-
         // 2. 将数据添加到列表中
         const { results } = data.data
-        // 数组合并
         this.list.push(...results)
-        // 更新总数据条数
+        // 把总数量传递到父级
         this.$emit('onload-success', data.data)
-        // 3. 将加载更多的 loading 设置为 false
+        // 3. 将 loading 设置为 false
         this.loading = false
-
         // 4. 判断是否还有数据
         if (results.length) {
-          this.offset = data.data.last_id // 更新获取下一页数据的页码
+          // 4.1 有就更新获取下一页的数据页码
+          this.offset = data.data.last_id
         } else {
-          this.finished = true // 没有数据了，关闭加载更多
+          // 4.2 没有就将 finished 设置结束
+          this.finished = true
         }
       } catch (err) {
         this.error = true
@@ -95,4 +98,5 @@ export default {
   }
 }
 </script>
-<style scoped lang="less"></style>
+
+<style lang="less" scoped></style>

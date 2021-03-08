@@ -112,7 +112,7 @@ export default {
         const { data } = await login(user)
         // 设置数据到Vuex
         this.$store.commit('setUser', data.data)
-        this.$toast.success('登录成功')
+        this.$toast.success('登录成功!')
 
         // TODO: 登录成功,跳转回原来的页面
         this.$router.back()

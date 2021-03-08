@@ -1,23 +1,23 @@
 <template>
   <div class="article-container">
-    <!-- 导航栏... -->
-    <van-nav-bar class="page-nav-bar" left-arrow title="**头条**"></van-nav-bar>
-    <!-- /导航栏 ...-->
+    <!-- 导航栏 -->
+    <van-nav-bar class="page-nav-bar" left-arrow title="黑马头条"></van-nav-bar>
+    <!-- /导航栏 -->
 
     <div class="main-wrap">
-      <!-- 加载中... -->
+      <!-- 加载中 -->
       <div class="loading-wrap" v-if="loading">
         <van-loading color="#3296fa" vertical>加载中</van-loading>
       </div>
-      <!-- /加载中... -->
+      <!-- /加载中 -->
 
-      <!-- 加载完成-文章详情... -->
+      <!-- 加载完成-文章详情 -->
       <div class="article-detail" v-else-if="article.title">
-        <!-- 文章标题... -->
+        <!-- 文章标题 -->
         <h1 class="article-title">{{ article.title }}</h1>
-        <!-- /文章标题... -->
+        <!-- /文章标题 -->
 
-        <!-- 用户信息... -->
+        <!-- 用户信息 -->
         <van-cell class="user-info" center :border="false">
           <van-image
             class="avatar"
@@ -52,7 +52,7 @@
           @onload-success="totalCommentCount = $event.total_count"
           @reply-click="onReplyClick"
         />
-        <!-- /文章评论列表 -->
+
         <!-- 底部区域 -->
         <div class="article-bottom">
           <van-button
@@ -64,17 +64,14 @@
             >写评论</van-button
           >
           <!-- 这里在 info 替换成 badge -->
-          <van-icon
-            name="comment-o"
-            class="comment-icon"
-            :info="totalCommentCount"
-          />
+          <van-icon name="comment-o" :badge="totalCommentCount" color="#777" />
           <!-- 文章收藏 -->
           <collect-article
             class="btn-item"
             v-model="article.is_collected"
             :article-id="article.art_id"
           />
+          <!-- 文章点赞 -->
           <like-article
             class="btn-item"
             v-model="article.attitude"
@@ -83,14 +80,13 @@
           <van-icon name="share" color="#777777"></van-icon>
         </div>
         <!-- /底部区域 -->
-        <!-- 发布评论 -->
+        <!-- 发布评论的弹层 -->
         <van-popup v-model="isPostShow" position="bottom">
           <comment-post
             :target="article.art_id"
             @post-success="onPostSuccess"
-          />
+          ></comment-post>
         </van-popup>
-        <!-- /发布评论 -->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -110,11 +106,11 @@
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
     <!-- 评论回复 -->
-    <van-popup v-model="isReplyShow" position="bottom">
+    <!-- 弹出层是懒渲染的：只有在第一次展示的时候才会渲染里面的内容，之后它的关闭和显示都是在切换内容的显示和隐藏 -->
+    <van-popup v-model="isReplyShow" position="bottom" style="height: 100%;">
       <comment-reply
-        :target="article.art_id"
+        v-if="isReplyShow"
         :comment="currentComment"
-        @post-success="onPostSuccess"
         @close="isReplyShow = false"
       />
     </van-popup>
@@ -123,7 +119,6 @@
 </template>
 
 <script>
-// 加载组件
 import { getArticleById } from '@/api/article'
 import { ImagePreview } from 'vant'
 import FollowUser from '@/components/follow-user'
@@ -132,10 +127,8 @@ import LikeArticle from '@/components/like-article'
 import CommentList from './components/comment-list'
 import CommentPost from './components/comment-post'
 import CommentReply from './components/comment-reply'
-
 export default {
   name: 'ArticleIndex',
-  // 注册组件
   components: {
     FollowUser,
     CollectArticle,
@@ -143,6 +136,12 @@ export default {
     CommentList,
     CommentPost,
     CommentReply
+  },
+  // 给所有的后代组件提供数据
+  provide: function() {
+    return {
+      articleId: this.articleId
+    }
   },
   props: {
     articleId: {
@@ -156,8 +155,8 @@ export default {
       loading: true, // 加载中的状态
       errStatus: 0, // 失败的状态码
       followLoading: false, // 关注按钮的 loading 状态
-      totalCommentCount: 0, // 评论总数
-      isPostShow: false, // 控制发布评论的显示状态
+      totalCommentCount: 0,
+      isPostShow: false, // 控制评论弹层显示/隐藏
       commentList: [], // 评论列表
       isReplyShow: false,
       currentComment: {} // 当前点击回复的评论项
@@ -177,10 +176,14 @@ export default {
       this.loading = true
       // console.log(this.articleId.toString(), 233)
       try {
-        const { data } = await getArticleById(this.articleId.toString())
+        const { data } = await getArticleById(this.articleId)
         /* if (Math.random() > 0.5) {
           JSON.parse('xxx')
         } */
+        // 后端返回的可能是 null
+        if (data.data.attitude === null) {
+          data.data.attitude = -1
+        }
         this.article = data.data
         setTimeout(() => {
           this.previewImage()
@@ -208,17 +211,15 @@ export default {
         }
       })
     },
-    // 给commentList追加数据
     onPostSuccess(data) {
-      // 关闭弹出层
+      // 关闭弹层
       this.isPostShow = false
-      // 将发布内容显示列表顶部
+      // 将发布内容展示到页面顶部
       this.commentList.unshift(data.new_obj)
     },
     onReplyClick(comment) {
       console.log(comment)
       this.currentComment = comment
-      // 显示评论回复弹出层
       this.isReplyShow = true
     }
   }

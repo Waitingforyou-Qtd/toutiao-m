@@ -1,14 +1,14 @@
 <template>
   <div class="my-container">
-    <!--TODO: 已登录头部 -->
+    <!-- 已登录 -->
     <div v-if="user" class="header user-info">
       <div class="base-info">
         <div class="left">
-          <van-image fit="cover" class="avatar" :src="userInfo.photo" round />
+          <van-image class="avatar" round fit="cover" :src="userInfo.photo" />
           <span class="name">{{ userInfo.name }}</span>
         </div>
         <div class="right">
-          <van-button type="default" size="mini" round>编辑资料</van-button>
+          <van-button size="mini" round to="/user/profile">编辑资料</van-button>
         </div>
       </div>
       <div class="data-stats">
@@ -26,121 +26,108 @@
         </div>
         <div class="data-item">
           <span class="count">{{ userInfo.like_count }}</span>
-          <span class="text">点赞</span>
+          <span class="text">获赞</span>
         </div>
       </div>
     </div>
-    <!-- 已登录头部 -->
-    <!--TODO: 未登录头部 -->
+    <!-- 未登录头部 -->
     <div v-else class="header not-login">
       <div class="login-btn" @click="$router.push('/login')">
-        <img class="mobile-img" src="~@/assets/mobile.png" />
+        <img class="mobile-img" src="~@/assets/mobile.png" alt="" />
         <span class="text">登录 / 注册</span>
       </div>
     </div>
-    <!-- 未登录头部 -->
-    <!-- 宫格 -->
-    <van-grid class="grid-nav" :column-num="2" clickable>
+    <!-- 宫格导航 -->
+    <van-grid :column-num="2" class="grid-nav mb-9" clickable>
       <van-grid-item class="grid-item">
-        <i slot="icon" class="toutiao toutiao-shoucang"></i>
-        <!-- 具名插槽 -->
-        <span class="text" slot="text">收藏</span>
+        <i slot="icon" class="iconfont iconshoucang"></i>
+        <span slot="text" class="text">收藏</span>
       </van-grid-item>
       <van-grid-item class="grid-item">
-        <i slot="icon" class="toutiao toutiao-lishi"></i>
-        <span class="text" slot="text">历史</span>
+        <i slot="icon" class="iconfont iconlishi"></i>
+        <span slot="text" class="text">历史</span>
       </van-grid-item>
     </van-grid>
-
+    <!-- Cell 单元格 -->
     <van-cell title="消息通知" is-link />
     <van-cell class="mb-9" title="小智同学" is-link />
     <van-cell
-      @click="onLogout"
       v-if="user"
       class="logout-cell"
-      title="退出登录"
-      center
       clickable
+      title="退出登录"
+      @click="onLogout"
     />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-// 按需加载
 import { getUserInfo } from '@/api/user'
 export default {
   name: 'MyIndex',
-  components: {},
-  props: {},
   data() {
     return {
-      // TODO: 用户信息
       userInfo: {}
     }
   },
   computed: {
     ...mapState(['user'])
   },
-  watch: {},
   created() {
-    // TODO:如果用户登录了，请求获取当前登录用户的信息
+    // 如果用户登录了，才需要获取自己的信息
     if (this.user) {
       this.loadUserInfo()
     }
   },
-  mounted() {},
   methods: {
     onLogout() {
-      // 退出提示
-      // 在组件中需要使用 this.$dialog 来调用弹框组件
+      // 提示
       this.$dialog
         .confirm({
-          title: '您确认要退出吗?'
+          title: '确认退出吗？'
         })
         .then(() => {
-          // on confirm
-          // 确认退出：清除登录状态（容器中的 user + 本地存储中的 user）
+          // 确认
+          // 清除登录状态（容器中的 user 和本地的 user）
           this.$store.commit('setUser', null)
         })
         .catch(() => {
-          // on cancel
-          console.log('取消登录!')
+          // 关闭
         })
     },
     async loadUserInfo() {
-      // try..catch方法, 可以抛出错误, 但是不会影响整个程序运转
       try {
         const { data } = await getUserInfo()
         this.userInfo = data.data
       } catch (err) {
-        // console.log(err)
-        this.$toast('获取数据失败!')
+        this.$toast('获取数据失败，请稍后重试')
       }
     }
   }
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
 .my-container {
   .header {
-    height: 360px;
-    background: url('~@/assets/banner.png'); //背景图
-    background-size: cover; // 缩放填充整个页面
+    height: 361px;
+    background: url('~@/assets/banner.png');
+    background-size: cover;
   }
   .not-login {
-    display: flex; // flex布局
-    justify-content: center; //水平居中
-    align-items: center; //垂直居中
+    display: flex;
+    justify-content: center;
+    align-items: center;
     .login-btn {
-      display: flex; // flex布局
-      flex-direction: column; // 调整主轴方向垂直居中显示
-      justify-content: center; //水平居中
-      align-items: center; //垂直居中
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       .mobile-img {
         width: 132px;
         height: 132px;
+        margin-bottom: 15px;
       }
       .text {
         font-size: 28px;
@@ -150,69 +137,69 @@ export default {
   }
   .user-info {
     .base-info {
-      height: 230px;
+      height: 231px;
       padding: 76px 32px 23px;
-      box-sizing: border-box; // C3盒子模型
+      box-sizing: border-box;
       display: flex;
-      justify-content: space-between; //两边撑开
-      align-items: center; //水平居中
+      justify-content: space-between;
+      align-items: center;
       .left {
         display: flex;
-        align-items: center; //垂直居中
+        align-items: center;
         .avatar {
-          width: 130px;
-          height: 130px;
-          border: 2px solid #fff; //头像边框
-          margin-right: 25px;
+          width: 132px;
+          height: 132px;
+          border: 4px solid #fff;
+          margin-right: 23px;
         }
         .name {
-          font-size: 40px;
+          font-size: 30px;
           color: #fff;
         }
       }
     }
     .data-stats {
-      display: flex; //flxe布局
+      display: flex;
       .data-item {
         height: 130px;
-        flex: 1; // 所有的子元素平分
+        flex: 1;
         display: flex;
-        flex-direction: column; //垂直分布
-        justify-content: center; //水平居中
-        align-items: center; // 垂直居中
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         color: #fff;
         .count {
-          font-size: 38px;
+          font-size: 36px;
         }
         .text {
-          font-size: 26px;
+          font-size: 23px;
         }
       }
     }
   }
   .grid-nav {
     .grid-item {
-      height: 140px;
-      i.toutiao {
-        font-size: 46px;
+      height: 141px;
+      i.iconfont {
+        font-size: 45px;
       }
-      .toutiao-shoucang {
+      .iconshoucang {
         color: #eb5253;
       }
-      .toutiao-lishi {
+      .iconlishi {
         color: #ff9d1d;
       }
       span.text {
-        font-size: 32px;
+        font-size: 28px;
       }
     }
   }
-}
-.logout-cell {
-  height: 100px;
-  text-align: center;
-  color: #eb5253;
-  margin: 10px 0;
-  font-size: 30px;
+  .logout-cell {
+    text-align: center;
+    color: #d86262;
+  }
+  .mb-9 {
+    margin-bottom: 9px;
+  }
 }
 </style>

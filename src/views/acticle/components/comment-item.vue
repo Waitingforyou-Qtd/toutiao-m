@@ -11,15 +11,16 @@
       <div class="user-name">{{ comment.aut_name }}</div>
       <van-button
         class="like-btn"
-        :icon="comment.is_liking ? 'good-job' : 'good-job-o'"
         :class="{
           liked: comment.is_liking
         }"
-        @click="onCommentLike"
+        :icon="comment.is_liking ? 'good-job' : 'good-job-o'"
         :loading="commentLoading"
+        @click="onCommentLike"
         >{{ comment.like_count || '赞' }}</van-button
       >
     </div>
+
     <div slot="label">
       <p class="comment-content">{{ comment.content }}</p>
       <div class="bottom-info">
@@ -38,13 +39,11 @@
 </template>
 
 <script>
-// 在事件处理函数中
 import { addCommentLike, deleteCommentLike } from '@/api/comment'
 export default {
   name: 'CommentItem',
   components: {},
   props: {
-    // 声明接受
     comment: {
       type: Object,
       required: true
@@ -64,17 +63,17 @@ export default {
       this.commentLoading = true
       try {
         if (this.comment.is_liking) {
-          // 如果已经赞了则取消点赞
+          // 已经点赞了，取消点赞
           await deleteCommentLike(this.comment.com_id)
           this.comment.like_count--
         } else {
-          // 如果没有赞，则点赞
+          // 没有点赞，添加点赞
           await addCommentLike(this.comment.com_id)
           this.comment.like_count++
         }
         this.comment.is_liking = !this.comment.is_liking
       } catch (err) {
-        this.$toast('操作失败,请重试...')
+        this.$toast('操作失败，请重试')
       }
       this.commentLoading = false
     }
@@ -114,7 +113,7 @@ export default {
     align-items: center;
   }
   .reply-btn {
-    width: 135px;
+    // width: 135px;
     height: 48px;
     line-height: 48px;
     font-size: 21px;
@@ -128,10 +127,10 @@ export default {
     line-height: 30px;
     margin-right: 7px;
     .van-icon {
-      font-size: 32px;
+      font-size: 30px;
     }
     &.liked {
-      color: #ee7165;
+      color: #e5645f;
     }
   }
 }

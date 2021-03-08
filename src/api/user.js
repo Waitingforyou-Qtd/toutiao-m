@@ -65,3 +65,23 @@ export const deleteFollow = target => {
     url: `/app/v1_0/user/followings/${target}`
   })
 }
+/**
+ * 获取用户个人资料
+ */
+// 获取指定用户信息
+export const getUserProfile = target => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user/profile'
+  })
+}
+/**
+ * 更新昵称
+ */
+export const updateUserName = data => {
+  return request({
+    method: 'PATCH',
+    url: '/app/v1_0/user/profile',
+    data
+  })
+}
